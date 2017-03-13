@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="task-management.css">
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div class="page-top">
+        <div class="page-content">
+            <h2>任务计划列表</h2>
+        </div>
+    </div>
+    <div class="main">
+        <h3 class="big-title">添加任务：</h3>
+        <input 
+            placeholder="例如：学习英语；    提示：+回车即可添加任务" 
+            class="task-input" 
+            type="text"
+            v-on:keyup.enter="addTask"
+        	v-model="task"
+        />
+        <ul class="task-count" v-show="list.length" >
+            <li>{{unfinished}}个任务未完成</li>
+            <li class="action">
+                <a class="active" href="#all">所有任务</a>
+                <a href="#unfinished">未完成的任务</a>
+                <a href="#finished">完成的任务</a>
+            </li>
+        </ul>
+        <h3 class="big-title">任务列表：</h3>
+        <div class="tasks">
+
+            <span class="no-task-tip" v-show="!list.length">还没有添加任何任务</span>
+            <ul class="todo-list">
+                <li class="todo" v-for="item in filteredList" v-bind:class="{completed:item.isChecked,editing:item==editingTask}">
+                    <div class="view">
+                        <input class="toggle" type="checkbox" v-model="item.isChecked"/>
+                        <label @dblclick="editTask(item)">{{item.title}}</label>
+                        <button class="destroy" v-on:click="deleteTask(item)"></button>
+                    </div>
+                    <input
+                	    class="edit" 
+                        type="text"
+                        v-focus="item===editingTask"
+                        v-model="item.title"
+                        @blur="finishTask"
+                        @keyup.enter="finishTask"
+                        @keyup.esc="cancelEdit(item)"
+                	/>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <script src="task-management.js"></script>
+</body>
+</html>
